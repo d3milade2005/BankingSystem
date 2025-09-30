@@ -1,5 +1,8 @@
 package org.bankapp.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.time.LocalDateTime;
 
 public class Transaction {
@@ -13,7 +16,15 @@ public class Transaction {
     private final String toAccount; // null for withdrawal
     private final String description;
 
-    public Transaction(String id, LocalDateTime timestamp, Type type, double amount, String fromAccount, String toAccount, String description) {
+    @JsonCreator
+    public Transaction(
+            @JsonProperty("id") String id,
+            @JsonProperty("timestamp") LocalDateTime timestamp,
+            @JsonProperty("type") Type type,
+            @JsonProperty("amount") double amount,
+            @JsonProperty("fromAccount") String fromAccount,
+            @JsonProperty("toAccount") String toAccount,
+            @JsonProperty("description") String description) {
         this.id = id;
         this.timestamp = timestamp;
         this.type = type;

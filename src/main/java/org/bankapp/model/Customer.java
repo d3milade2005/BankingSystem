@@ -1,14 +1,22 @@
 package org.bankapp.model;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.util.UUID;
 
 public class Customer {
-//    private static int idCounter = 1;
     private final String customerId;
     private String customerName;
     private String customerEmail;
     private String customerPhoneNumber;
 
-    public Customer(String customerId, String customerName, String customerEmail, String customerPhoneNumber) {
-        this.customerId = customerId;
+    @JsonCreator
+    public Customer(
+            @JsonProperty("customerId") String customerId,
+            @JsonProperty("customerName") String customerName,
+            @JsonProperty("customerEmail") String customerEmail,
+            @JsonProperty("customerPhoneNumber") String customerPhoneNumber) {
+        this.customerId = UUID.randomUUID().toString();
         this.customerName = customerName;
         this.customerEmail = customerEmail;
         this.customerPhoneNumber = customerPhoneNumber;
@@ -17,7 +25,6 @@ public class Customer {
     public String getCustomerId() {
         return customerId;
     }
-
     public String getCustomerName() {
         return customerName;
     }

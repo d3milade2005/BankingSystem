@@ -1,25 +1,27 @@
 package org.bankapp.service;
 
-import org.bankapp.model.CurrentAccount;
-import org.bankapp.model.Customer;
-import org.bankapp.model.SavingsAccount;
-import org.bankapp.model.Transaction;
-import org.bankapp.utils.AccountNumberGenerator
+import org.bankapp.model.*;
+import org.bankapp.repository.TransactionRepository;
+import org.bankapp.utils.AccountNumberGenerator;
 import org.bankapp.repository.AccountRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 public class BankService {
     private final AccountRepository accountRepository;
+    private final TransactionRepository transactionRepository;
 
-    public BankService(AccountRepository accountRepository) {
+    public BankService(AccountRepository accountRepository, TransactionRepository transactionRepository) {
         this.accountRepository = accountRepository;
+        this.transactionRepository = transactionRepository;
     }
 
     public SavingsAccount createSavingsAccount(Customer owner, double interestRate) {
         String accNo = AccountNumberGenerator.generate();
         SavingsAccount acc = new SavingsAccount(accNo, owner, interestRate);
-        accountRepo.save(acc);
+        accountRepository.save(acc);
         return acc;
     }
 
@@ -31,18 +33,79 @@ public class BankService {
     }
 
     public void deposit(String accountNumber, double amount) {
-        throw new UnsupportedOperationException("TODO: implement deposit logic (validate, update balance, record transaction)");
+        Account account = accountRepository.findByNumber(accountNumber);
+        double newBalance = account.getBalance() + amount;
+        account.setBalance(newBalance);
+        accountRepository.save(account);
+
+        Transaction tx = new Transaction(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                Transaction.Type.DEPOSIT,
+                amount,
+                null,
+                accountNumber,
+                "Deposit to account " + accountNumber
+        );
+        transactionRepository.save(tx);
+        System.out.println("✅ Deposited " + amount + " into " + accountNumber);
     }
 
     public void withdraw(String accountNumber, double amount) {
-        throw new UnsupportedOperationException("TODO: implement withdraw logic (check funds/overdraft, update, record)");
+//        throw new UnsupportedOperationException("TODO: implement withdraw logic (check funds/overdraft, update, record)");
+        Account account = accountRepository.findByNumber(accountNumber);
+
+        if (account.getBalance() < 0 || account.getBalance() < amount) {
+            System.out.println("Insufficient Funds");
+        }
+        double newBalance = account.getBalance() - amount;
+        account.setBalance(newBalance);
+        accountRepository.save(account);
+
+        Transaction tx = new Transaction(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                Transaction.Type.WITHDRAWAL,
+                amount,
+                accountNumber,
+                null,
+                "Withdraw from account " + accountNumber
+        );
+        transactionRepository.save(tx);
+        System.out.println("✅ Withdrew \" + amount + \" from \" + accountNumber");
     }
 
     public void transfer(String fromAccount, String toAccount, double amount) {
-        throw new UnsupportedOperationException("TODO: implement atomic transfer (withdraw + deposit with locking)");
+//        throw new UnsupportedOperationException("TODO: implement atomic transfer (withdraw +
+        Account fromAcc = accountRepository.findByNumber(fromAccount);
+        Account toAcc = accountRepository.findByNumber(toAccount);
+
+        if (fromAcc.getBalance() < amount || fromAcc.getBalance() <= 0) {
+            System.out.println("Insufficient Funds");
+        }
+
+        double newBalance = fromAcc.getBalance() - amount;
+        fromAcc.setBalance(newBalance);
+        accountRepository.save(fromAcc);
+
+        double newToBalance = toAcc.getBalance() + amount;
+        toAcc.setBalance(newToBalance);
+        accountRepository.save(toAcc);
+
+        Transaction tx = new Transaction(
+                UUID.randomUUID().toString(),
+                LocalDateTime.now(),
+                Transaction.Type.TRANSFER,
+                amount,
+                fromAccount,
+                toAccount,
+                "Transfer from account " + fromAccount + " to account " + toAccount
+        );
+        transactionRepository.save(tx)
     }
 
     public List<Transaction> getTransactions(String accountNumber) {
-        throw new UnsupportedOperationException("TODO: return transactions for account");
+//        throw new UnsupportedOperationException("TODO: return transactions for account");
+        return transactionRepository.findByAccountNumber(accountNumber);
     }
 }

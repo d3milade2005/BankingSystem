@@ -1,15 +1,18 @@
 package org.bankapp;
 
-import org.bankapp.model.*;
-import org.bankapp.repository.InMemoryAccountRepository;
+import org.bankapp.model.Transaction;
+import org.bankapp.repository.FileAccountRepository;
 import org.bankapp.repository.AccountRepository;
+import org.bankapp.repository.FileTransactionRepository;
+import org.bankapp.repository.TransactionRepository;
 import org.bankapp.service.BankService;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        AccountRepository repo = new InMemoryAccountRepository();
-        BankService bank = new BankService(repo);
+        AccountRepository accRepo = new FileAccountRepository();
+        TransactionRepository tranRepo= new FileTransactionRepository();
+        BankService bank = new BankService(accRepo, tranRepo);
         Scanner scanner = new Scanner(System.in);
 
         while (true) {

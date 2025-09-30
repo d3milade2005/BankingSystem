@@ -22,8 +22,11 @@ public abstract class Account {
     public Customer getOwner() { return owner; }
     public double getBalance() { return balance; }
     public AccountType getType() { return type; }
-    // defensive copy to prevent external modification:
     public List<Transaction> getTransactions() { return Collections.unmodifiableList(transactions); }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
 
     // Helper to record transaction (no business rules here)
     protected void recordTransaction(Transaction tx) {
