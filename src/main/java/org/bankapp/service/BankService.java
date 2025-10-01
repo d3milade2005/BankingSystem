@@ -52,7 +52,6 @@ public class BankService {
     }
 
     public void withdraw(String accountNumber, double amount) {
-//        throw new UnsupportedOperationException("TODO: implement withdraw logic (check funds/overdraft, update, record)");
         Account account = accountRepository.findByNumber(accountNumber);
 
         if (account.getBalance() < 0 || account.getBalance() < amount) {
@@ -76,7 +75,6 @@ public class BankService {
     }
 
     public void transfer(String fromAccount, String toAccount, double amount) {
-//        throw new UnsupportedOperationException("TODO: implement atomic transfer (withdraw +
         Account fromAcc = accountRepository.findByNumber(fromAccount);
         Account toAcc = accountRepository.findByNumber(toAccount);
 
@@ -101,11 +99,14 @@ public class BankService {
                 toAccount,
                 "Transfer from account " + fromAccount + " to account " + toAccount
         );
-        transactionRepository.save(tx)
+        transactionRepository.save(tx);
     }
 
     public List<Transaction> getTransactions(String accountNumber) {
-//        throw new UnsupportedOperationException("TODO: return transactions for account");
-        return transactionRepository.findByAccountNumber(accountNumber);
+        return (List<Transaction>) transactionRepository.findByAccountNumber(accountNumber);
+    }
+
+    public Account getAccountDetails(String accountNumber) {
+        return accountRepository.findByNumber(accountNumber);
     }
 }

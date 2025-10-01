@@ -2,6 +2,8 @@ package org.bankapp.repository;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.bankapp.model.Account;
 
 import java.io.File;
@@ -14,8 +16,11 @@ public class FileAccountRepository implements AccountRepository {
     private final File file = new File("accounts.json");
 
     public FileAccountRepository() {
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         loadFromFile();
     }
+
 
     @Override
     public void save(Account account) {

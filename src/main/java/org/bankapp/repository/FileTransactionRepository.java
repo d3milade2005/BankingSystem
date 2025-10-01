@@ -2,7 +2,10 @@ package org.bankapp.repository;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.bankapp.model.Transaction;
+
 
 import java.io.File;
 import java.io.IOException;
@@ -11,10 +14,13 @@ import java.util.stream.Collectors;
 
 public class FileTransactionRepository implements TransactionRepository {
     private static final String FILE_PATH = "transactions.json";
-    private final ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper;
     private List<Transaction> transactions = new ArrayList<>();
 
     public FileTransactionRepository() {
+        mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         loadFromFile();
     }
 

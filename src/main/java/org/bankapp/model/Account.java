@@ -1,15 +1,27 @@
 package org.bankapp.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type"
+)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = SavingsAccount.class, name = "SAVINGS"),
+        @JsonSubTypes.Type(value = CurrentAccount.class, name = "CURRENT")
+})
 public abstract class Account {
     protected final String accountNumber;
     protected final Customer owner;
     protected double balance;
     protected final AccountType type;
-    protected final List<Transaction> transactions = new ArrayList<>();
 
     public Account(String accountNumber, Customer owner, AccountType type) {
         this.accountNumber = accountNumber;
@@ -22,16 +34,7 @@ public abstract class Account {
     public Customer getOwner() { return owner; }
     public double getBalance() { return balance; }
     public AccountType getType() { return type; }
-    public List<Transaction> getTransactions() { return Collections.unmodifiableList(transactions); }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
-
-    // Helper to record transaction (no business rules here)
-    protected void recordTransaction(Transaction tx) {
-        transactions.add(tx);
-    }
+    public void setBalance(double balance) { this.balance = balance; }
 
     @Override
     public String toString() {

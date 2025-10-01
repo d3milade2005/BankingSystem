@@ -12,7 +12,6 @@ public class Customer {
 
     @JsonCreator
     public Customer(
-            @JsonProperty("customerId") String customerId,
             @JsonProperty("customerName") String customerName,
             @JsonProperty("customerEmail") String customerEmail,
             @JsonProperty("customerPhoneNumber") String customerPhoneNumber) {
@@ -22,9 +21,8 @@ public class Customer {
         this.customerPhoneNumber = customerPhoneNumber;
     }
 
-    public String getCustomerId() {
-        return customerId;
-    }
+    public String getCustomerId() { return customerId; }
+
     public String getCustomerName() {
         return customerName;
     }

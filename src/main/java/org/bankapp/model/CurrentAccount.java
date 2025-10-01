@@ -18,7 +18,6 @@ public class CurrentAccount extends Account{
     public double getOverDraftLimit() {
         return overDraftLimit;
     }
-
     public void setOverDraftLimit(double overDraftLimit) {
         this.overDraftLimit = overDraftLimit;
     }
