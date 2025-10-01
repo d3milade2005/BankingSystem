@@ -92,7 +92,7 @@ public class Main {
                     double amountToSend = scanner.nextDouble();
                     scanner.nextLine();
 
-                    bank.transfer(fromAccountNumber, toAccountNumber,amountToSend);;
+                    bank.transfer(fromAccountNumber, toAccountNumber,amountToSend);
                     break;
                 case "6":
                     System.out.print("Enter your account number: ");
