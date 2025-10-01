@@ -67,6 +67,7 @@ public class Main {
 
                     System.out.print("Enter the amount: ");
                     double amount = scanner.nextDouble();
+                    scanner.nextLine();
 
                     bank.deposit(accountNumber, amount);
                     break;
@@ -76,6 +77,7 @@ public class Main {
 
                     System.out.print("Enter the amount: ");
                     double amount1 = scanner.nextDouble();
+                    scanner.nextLine();
 
                     bank.withdraw(accountNumber1, amount1);
                     break;
@@ -88,6 +90,7 @@ public class Main {
 
                     System.out.print("Enter the amount: ");
                     double amountToSend = scanner.nextDouble();
+                    scanner.nextLine();
 
                     bank.transfer(fromAccountNumber, toAccountNumber,amountToSend);;
                     break;
